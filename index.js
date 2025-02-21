@@ -1,30 +1,22 @@
-require("dotenv").config();
-
-if(process.env.NODE_ENV === "production"){
-  console.log("Running in Production Mode");
-
-} else if (process.env.NODE_ENV === "development"){
-  console.log("Runnig in Development mode");
-}else{
-  console.log("Unknown Environment Mode");
-}
-
-console.log("Server running on port:",process.env.PORT);
-console.log("Your API key:", process.env.API_KEY);
-console.log("Environment:", process.env.NODE_ENV);
+require('dotenv').config();
 
 const express = require('express');
-const { resolve } = require('path');
+const cors = require('cors');
 
 const app = express();
-const port = 3010;
+const PORT = process.env.PORT || 3010;
 
-app.use(express.static('static'));
+app.use(cors());
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.sendFile(resolve(__dirname, 'pages/index.html'));
-});
+app.get('/',(req,res)=> {
+  res.json({
+    message:"Environment variable demo.",
+    environment: process.env.NODE_ENV,
+    api_key: process.env.API_KEY ? "API key is set." : "API key is missing."
+  })
+})
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+app.listen(PORT, ()=>{
+  console.log(`Server is running in PORT ${PORT} in ${process.env.NODE_ENV} mode`)
+})
